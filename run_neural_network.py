@@ -15,6 +15,8 @@ sys.path.append(base_dir)
 from model.gru_model import GRUModel
 from model.gru_model2 import GRUModel2
 from model.lstm_model import LSTMModel
+from model.residuallstm_model import ResLSTM
+from model.residualgru_model import ResGRU
 from model.model_params import model_params
 from train_test_valid import train_fn,valid_fn,test_fn
 import matplotlib.pyplot as plt
@@ -26,20 +28,24 @@ def get_model(model,params):
         return LSTMModel(params=params)
     elif model == "GRUModel2":
         return GRUModel2(params=params)
+    elif model == "ResLSTM":
+        return ResLSTM(input_size=params['input_dim'], hidden_size=[128, 64])
+    elif model == "ResGRU":
+        return ResGRU(input_size=params['input_dim'], hidden_size=[128, 64, 32])
 
 if __name__ == "__main__" :
 
     parser = argparse.ArgumentParser(description='Configuration for the training script.')
 
     # Add arguments
-    parser.add_argument('--target_stock', type=str, default='2618', help='Stock for training and testing')
+    parser.add_argument('--target_stock', type=str, default='2603', help='Stock for training and testing')
     parser.add_argument('--train_seq_len', type=int, default=5, help='Training sequence length.')
     parser.add_argument('--predict_seq_len', type=int, default=1, help='Prediction sequence length.')
     parser.add_argument('--device', type=str, default='cuda' if torch.cuda.is_available() else 'cpu', help='Device to train on.')
     parser.add_argument('--batch_size', type=int, default=30, help='Batch size for training.')
     parser.add_argument('--epochs', type=int, default=300, help='Number of epochs for training.')
-    parser.add_argument('--learning_rate', type=float, default=5e-4, help='Learning rate for optimizer.')
-    parser.add_argument('--model', type=str, default='GRUModel2', choices=['GRUModel','GRUModel2','LSTMModel'])
+    parser.add_argument('--learning_rate', type=float, default=4e-3, help='Learning rate for optimizer.')
+    parser.add_argument('--model', type=str, default='ResGRU', choices=['GRUModel','GRUModel2','LSTMModel','ResLSTM','ResGRU'])
 
     # Parse arguments
     args = parser.parse_args()
