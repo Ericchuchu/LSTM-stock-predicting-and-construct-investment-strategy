@@ -11,6 +11,10 @@ Use APIs to fetch stock prices, institutional net buying/selling data, etc., and
 
 3. Conv-LSTM : LSTM constructed with convolutional 1D neural network in order to get more informations from the relationship between different feature
 
+4. Residual GRU : 3-layers GRU model embeded with residual network block
+
+5. Residual LSTM : 2-layers LSTM model embeded with residual network block
+
 ## Trade
 Long condition : When predicted stock close price higher than the close price of previous day (setting a threshold to filter better signals), using open price to buy the stock tomorrow and setting the minimum price in five days before the signals as stop loss point
 
