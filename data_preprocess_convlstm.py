@@ -36,7 +36,7 @@ def seed_everything(seed):
 
 def data_preprocess(data_path, type):
     # 計算keltner channel
-    def keltner_channel(high, low, close, timeperiod = 20, nbdev = 2):
+    def keltner_channel(high, low, close, timeperiod = 20, nbdev = 1.5):
         middle_line = talib.EMA(close, timeperiod = timeperiod)
         atr = talib.ATR(high, low, close, timeperiod = timeperiod)
         
@@ -53,12 +53,12 @@ def data_preprocess(data_path, type):
 
     # 計算指標
     upper_channel, middle_line, lower_channel = keltner_channel(data['High'], data['Low'], data['Close'])
-    upper, middle, lower = talib.BBANDS(data['Close'], timeperiod=19, nbdevup=2.44, nbdevdn=2.44, matype=0)
+    upper, middle, lower = talib.BBANDS(data['Close'], timeperiod=20, nbdevup=2, nbdevdn=2, matype=1)
     sar = talib.SAR(data['High'], data['Low'], acceleration=0.02, maximum=0.2)
     momentum = talib.MOM(data['Close'], timeperiod=10)
-    moving_average_5 = talib.SMA(data['Close'], timeperiod=5)
-    moving_average_10 = talib.SMA(data['Close'], timeperiod=10)
-    moving_average_20 = talib.SMA(data['Close'], timeperiod=20)
+    moving_average_5 = talib.EMA(data['Close'], timeperiod=5)
+    moving_average_10 = talib.EMA(data['Close'], timeperiod=10)
+    moving_average_20 = talib.EMA(data['Close'], timeperiod=20)
 
     # 放入dataframe
     data['SAR'] = sar
