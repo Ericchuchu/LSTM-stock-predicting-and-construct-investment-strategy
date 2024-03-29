@@ -15,6 +15,9 @@ Use APIs to fetch stock prices, institutional net buying/selling data, etc., and
 
 5. Residual LSTM : 2-layers LSTM model embeded with residual network block
 
+## Train and validate
+Cross validation : has been applied cross validation method on the training progress, but the performance grtting worse, so eventually I did not use cross validation method, the cause of the effect may comes to the time series data, which does not match thr concept of cross validation 
+
 ## Trade
 Long condition : When predicted stock close price higher than the close price of previous day (setting a threshold to filter better signals), using open price to buy the stock tomorrow and setting the minimum price in five days before the signals as stop loss point
 
