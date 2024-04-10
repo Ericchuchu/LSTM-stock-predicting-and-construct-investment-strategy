@@ -11,9 +11,11 @@ Use APIs to fetch stock prices, institutional net buying/selling data, etc., and
 
 3. Conv-LSTM : LSTM constructed with convolutional 1D neural network in order to get more informations from the relationship between different feature
 
-4. Residual GRU : 3-layers GRU model embeded with residual network block
+4. CNN + RNN : a 3-layer GRU model combine with convolutional 1D neural networks(with different dilations), and their blocks are independent to others. The outputs from different blocks combined and put into the final block contained with 1-layer GRU and linear regression layer
 
-5. Residual LSTM : 2-layers LSTM model embeded with residual network block
+5. Residual GRU : 3-layers GRU model embeded with residual network block
+
+6. Residual LSTM : 2-layers LSTM model embeded with residual network block
 
 ## Train and validate
 Cross validation : has been applied cross validation method on the training progress, but the performance grtting worse, so eventually I did not use cross validation method, the cause of the effect may comes to the time series data, which does not match thr concept of cross validation 
