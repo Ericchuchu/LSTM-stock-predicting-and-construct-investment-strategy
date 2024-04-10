@@ -7,7 +7,7 @@ import pandas as pd
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, TensorDataset
-from data_preprocess_convlstm import test_input, test_label
+from data_preprocess_3channels import test_input, test_label
 import os
 import sys
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

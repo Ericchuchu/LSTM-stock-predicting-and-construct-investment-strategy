@@ -45,7 +45,7 @@ if __name__ == "__main__" :
     parser.add_argument('--batch_size', type=int, default=30, help='Batch size for training.')
     parser.add_argument('--epochs', type=int, default=300, help='Number of epochs for training.')
     parser.add_argument('--learning_rate', type=float, default=4e-3, help='Learning rate for optimizer.')
-    parser.add_argument('--model', type=str, default='ResGRU', choices=['GRUModel','GRUModel2','LSTMModel','ResLSTM','ResGRU'])
+    parser.add_argument('--model', type=str, default='GRUModel2', choices=['GRUModel','GRUModel2','LSTMModel','ResLSTM','ResGRU'])
 
     # Parse arguments
     args = parser.parse_args()
