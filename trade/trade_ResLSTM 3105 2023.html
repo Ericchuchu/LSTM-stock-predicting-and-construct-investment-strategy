@@ -7527,13 +7527,13 @@ a.anchor-link {
 <span class="c1"># data preprocess</span>
 <span class="n">target_stock</span> <span class="o">=</span> <span class="s2">"3105"</span>
 <span class="n">threshold</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">stock_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s1">'C:\Users\Admin\Desktop\量化交易\lstm 預測股價(squeeze中包含的技術分析)\LSTM_stock_predicting\data\3105 2023.csv'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">,</span> <span class="n">encoding_errors</span><span class="o">=</span> <span class="s1">'ignore'</span><span class="p">)</span>
+<span class="n">stock_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s1">'C:\Users\111030\Desktop\LSTM-stock-predicting-and-construct-investment-strategy-main\data\3105 2023.csv'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">,</span> <span class="n">encoding_errors</span><span class="o">=</span> <span class="s1">'ignore'</span><span class="p">)</span>
 <span class="n">five_day_min_low</span> <span class="o">=</span> <span class="n">talib</span><span class="o">.</span><span class="n">MIN</span><span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'Low'</span><span class="p">],</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># 五天最低價當作long strategy的停損點</span>
 <span class="n">five_day_max_high</span> <span class="o">=</span> <span class="n">talib</span><span class="o">.</span><span class="n">MAX</span><span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'High'</span><span class="p">],</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># 五天最高價當作short strategy的停損點</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'five_day_min_low'</span><span class="p">]</span> <span class="o">=</span> <span class="n">five_day_min_low</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'five_day_max_high'</span><span class="p">]</span> <span class="o">=</span> <span class="n">five_day_max_high</span>
 <span class="n">stock_df</span> <span class="o">=</span> <span class="n">stock_df</span><span class="p">[</span><span class="mi">25</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">predicted_price_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s2">"C:\Users\Admin\Desktop\量化交易\lstm 預測股價(squeeze中包含的技術分析)\LSTM_stock_predicting\predicted_result\ResLSTM 3105 2023 predicted prices.csv"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">,</span> <span class="n">encoding_errors</span> <span class="o">=</span> <span class="s1">'ignore'</span><span class="p">)</span>
+<span class="n">predicted_price_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s2">"C:\Users\111030\Desktop\LSTM-stock-predicting-and-construct-investment-strategy-main\predicted_result\ResLSTM 3105 2023 predicted prices.csv"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">,</span> <span class="n">encoding_errors</span> <span class="o">=</span> <span class="s1">'ignore'</span><span class="p">)</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'Date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'Date'</span><span class="p">])</span>
 <span class="n">stock_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">stock_df</span><span class="p">[</span><span class="s1">'Date'</span><span class="p">]</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span> <span class="o">=</span> <span class="n">predicted_price_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
@@ -7643,7 +7643,7 @@ a.anchor-link {
 <td>0</td>
 <td>166.0</td>
 <td>176.5</td>
-<td>0.294927</td>
+<td>0.284562</td>
 <td>0.296817</td>
 <td>0</td>
 <td>0</td>
@@ -7667,7 +7667,7 @@ a.anchor-link {
 <td>48000</td>
 <td>168.5</td>
 <td>178.5</td>
-<td>0.295115</td>
+<td>0.286492</td>
 <td>0.309154</td>
 <td>1</td>
 <td>1</td>
@@ -7691,7 +7691,7 @@ a.anchor-link {
 <td>2000</td>
 <td>169.0</td>
 <td>182.5</td>
-<td>0.301457</td>
+<td>0.291724</td>
 <td>0.306686</td>
 <td>1</td>
 <td>0</td>
@@ -7715,12 +7715,12 @@ a.anchor-link {
 <td>0</td>
 <td>169.0</td>
 <td>182.5</td>
-<td>0.313620</td>
+<td>0.295344</td>
 <td>0.294350</td>
 <td>1</td>
 <td>0</td>
-<td>1</td>
 <td>0</td>
+<td>1</td>
 </tr>
 <tr>
 <th>2023-02-23</th>
@@ -7739,12 +7739,12 @@ a.anchor-link {
 <td>2000</td>
 <td>169.0</td>
 <td>182.5</td>
-<td>0.297844</td>
+<td>0.293600</td>
 <td>0.300518</td>
 <td>0</td>
 <td>1</td>
-<td>1</td>
 <td>0</td>
+<td>1</td>
 </tr>
 <tr>
 <th>...</th>
@@ -7787,12 +7787,12 @@ a.anchor-link {
 <td>13103</td>
 <td>150.0</td>
 <td>169.5</td>
-<td>0.244656</td>
+<td>0.254259</td>
 <td>0.251172</td>
 <td>0</td>
 <td>1</td>
-<td>0</td>
 <td>1</td>
+<td>0</td>
 </tr>
 <tr>
 <th>2023-12-25</th>
@@ -7811,12 +7811,12 @@ a.anchor-link {
 <td>3806</td>
 <td>150.0</td>
 <td>161.0</td>
-<td>0.242202</td>
+<td>0.251532</td>
 <td>0.258574</td>
 <td>0</td>
 <td>1</td>
-<td>0</td>
 <td>1</td>
+<td>0</td>
 </tr>
 <tr>
 <th>2023-12-26</th>
@@ -7835,7 +7835,7 @@ a.anchor-link {
 <td>3339</td>
 <td>150.0</td>
 <td>159.0</td>
-<td>0.248223</td>
+<td>0.252269</td>
 <td>0.261041</td>
 <td>1</td>
 <td>1</td>
@@ -7859,7 +7859,7 @@ a.anchor-link {
 <td>266972</td>
 <td>150.0</td>
 <td>160.5</td>
-<td>0.249486</td>
+<td>0.254005</td>
 <td>0.263508</td>
 <td>1</td>
 <td>1</td>
@@ -7883,7 +7883,7 @@ a.anchor-link {
 <td>0</td>
 <td>152.5</td>
 <td>160.5</td>
-<td>0.251209</td>
+<td>0.255420</td>
 <td>0.258574</td>
 <td>1</td>
 <td>0</td>
@@ -7979,34 +7979,20 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>C:\Users\Admin\AppData\Local\Temp\ipykernel_9808\2404176544.py:7: FutureWarning:
-
-Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-
-C:\Users\Admin\AppData\Local\Temp\ipykernel_9808\2404176544.py:10: FutureWarning:
-
-Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-
-C:\Users\Admin\AppData\Local\Temp\ipykernel_9808\2404176544.py:12: FutureWarning:
-
-Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-
-C:\Users\Admin\AppData\Local\Temp\ipykernel_9808\2404176544.py:23: FutureWarning:
-
-Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-
-C:\Users\Admin\AppData\Local\Temp\ipykernel_9808\2404176544.py:26: FutureWarning:
-
-Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-
-C:\Users\Admin\AppData\Local\Temp\ipykernel_9808\2404176544.py:28: FutureWarning:
-
-Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-
-C:\Users\Admin\AppData\Local\Temp\ipykernel_9808\2404176544.py:37: UserWarning:
-
-direction has no effect if short_entries and short_exits are set
-
+<pre>C:\Users\111030\AppData\Local\Temp\ipykernel_91568\2404176544.py:7: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  if stock_df['long_condition'][i] == 1:
+C:\Users\111030\AppData\Local\Temp\ipykernel_91568\2404176544.py:10: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  stop_loss_long = stock_df['five_day_min_low'][i]
+C:\Users\111030\AppData\Local\Temp\ipykernel_91568\2404176544.py:12: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  if (stock_df['Close'][i] &lt;= stop_loss_long) or (stock_df['short_condition'][i] == 1): # 停利停損
+C:\Users\111030\AppData\Local\Temp\ipykernel_91568\2404176544.py:23: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  if stock_df['short_condition'][i] == 1:
+C:\Users\111030\AppData\Local\Temp\ipykernel_91568\2404176544.py:26: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  stop_loss_short = stock_df['five_day_max_high'][i]
+C:\Users\111030\AppData\Local\Temp\ipykernel_91568\2404176544.py:28: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  if (stock_df['Close'][i] &gt;= stop_loss_short) or (stock_df['long_condition'][i] == 1):# 停利停損
+C:\Users\111030\AppData\Local\Temp\ipykernel_91568\2404176544.py:37: UserWarning: direction has no effect if short_entries and short_exits are set
+  pf = vbt.Portfolio.from_signals(stock_df['Open'],
 </pre>
 </div>
 </div>
@@ -8017,30 +8003,30 @@ direction has no effect if short_entries and short_exits are set
 End                                 2023-12-28 00:00:00
 Period                                213 days 00:00:00
 Start Value                                       100.0
-End Value                                    151.051325
-Total Return [%]                              51.051325
+End Value                                    163.692679
+Total Return [%]                              63.692679
 Benchmark Return [%]                           -5.60472
 Max Gross Exposure [%]                            100.0
 Total Fees Paid                                     0.0
-Max Drawdown [%]                              22.777598
-Max Drawdown Duration                  73 days 00:00:00
+Max Drawdown [%]                              10.754444
+Max Drawdown Duration                  44 days 00:00:00
 Total Trades                                         56
 Total Closed Trades                                  55
 Total Open Trades                                     1
-Open Trade PnL                                   -7.813
-Win Rate [%]                                  56.363636
-Best Trade [%]                                12.328767
-Worst Trade [%]                                  -9.375
-Avg Winning Trade [%]                          3.716959
-Avg Losing Trade [%]                           -2.88235
-Avg Winning Trade Duration    3 days 21:40:38.709677419
-Avg Losing Trade Duration     3 days 01:05:27.272727272
-Profit Factor                                  1.652653
-Expectancy                                     0.921182
-Sharpe Ratio                                   1.832109
-Calmar Ratio                                   4.510799
-Omega Ratio                                    1.307131
-Sortino Ratio                                  2.579982
+Open Trade PnL                                      0.0
+Win Rate [%]                                  52.727273
+Best Trade [%]                                16.393443
+Worst Trade [%]                               -8.450704
+Avg Winning Trade [%]                          3.808696
+Avg Losing Trade [%]                          -2.683423
+Avg Winning Trade Duration    3 days 17:22:45.517241379
+Avg Losing Trade Duration     3 days 01:08:34.285714285
+Profit Factor                                   1.72362
+Expectancy                                     0.777012
+Sharpe Ratio                                   2.164722
+Calmar Ratio                                   12.33746
+Omega Ratio                                    1.401519
+Sortino Ratio                                  3.925492
 </pre>
 </div>
 </div>

@@ -3,7 +3,7 @@
 <html lang="en">
 <head><meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>trade_ResGRU 3105 2023</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>trade_ResGRU 2603 2023</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <style type="text/css">
     pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -7525,15 +7525,15 @@ a.anchor-link {
 <span class="kn">from</span> <span class="nn">vectorbt.portfolio.enums</span> <span class="kn">import</span> <span class="n">OrderSide</span>
 
 <span class="c1"># data preprocess</span>
-<span class="n">target_stock</span> <span class="o">=</span> <span class="s2">"3105"</span>
+<span class="n">target_stock</span> <span class="o">=</span> <span class="s2">"2603"</span>
 <span class="n">threshold</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">stock_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s1">'C:\Users\111030\Desktop\LSTM-stock-predicting-and-construct-investment-strategy-main\data\3105 2023.csv'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">,</span> <span class="n">encoding_errors</span><span class="o">=</span> <span class="s1">'ignore'</span><span class="p">)</span>
+<span class="n">stock_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s1">'C:\Users\111030\Desktop\LSTM-stock-predicting-and-construct-investment-strategy-main\data\2603 2023.csv'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">,</span> <span class="n">encoding_errors</span><span class="o">=</span> <span class="s1">'ignore'</span><span class="p">)</span>
 <span class="n">five_day_min_low</span> <span class="o">=</span> <span class="n">talib</span><span class="o">.</span><span class="n">MIN</span><span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'Low'</span><span class="p">],</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># 五天最低價當作long strategy的停損點</span>
 <span class="n">five_day_max_high</span> <span class="o">=</span> <span class="n">talib</span><span class="o">.</span><span class="n">MAX</span><span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'High'</span><span class="p">],</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># 五天最高價當作short strategy的停損點</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'five_day_min_low'</span><span class="p">]</span> <span class="o">=</span> <span class="n">five_day_min_low</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'five_day_max_high'</span><span class="p">]</span> <span class="o">=</span> <span class="n">five_day_max_high</span>
 <span class="n">stock_df</span> <span class="o">=</span> <span class="n">stock_df</span><span class="p">[</span><span class="mi">25</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">predicted_price_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s2">"C:\Users\111030\Desktop\LSTM-stock-predicting-and-construct-investment-strategy-main\predicted_result\ResGRU 3105 2023 predicted prices.csv"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">,</span> <span class="n">encoding_errors</span> <span class="o">=</span> <span class="s1">'ignore'</span><span class="p">)</span>
+<span class="n">predicted_price_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s2">"C:\Users\111030\Desktop\LSTM-stock-predicting-and-construct-investment-strategy-main\predicted_result\ResGRU 2603 2023 predicted prices.csv"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">,</span> <span class="n">encoding_errors</span> <span class="o">=</span> <span class="s1">'ignore'</span><span class="p">)</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'Date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'Date'</span><span class="p">])</span>
 <span class="n">stock_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">stock_df</span><span class="p">[</span><span class="s1">'Date'</span><span class="p">]</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span> <span class="o">=</span> <span class="n">predicted_price_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
@@ -7629,22 +7629,22 @@ a.anchor-link {
 <tr>
 <th>2023-02-17</th>
 <td>2023-02-17</td>
-<td>5190000</td>
-<td>896464000</td>
-<td>169.5</td>
-<td>175.0</td>
-<td>169.0</td>
-<td>173.0</td>
-<td>2.0</td>
-<td>3871</td>
-<td>75000</td>
+<td>10357721</td>
+<td>1514125553</td>
+<td>146.5</td>
+<td>147.0</td>
+<td>145.5</td>
+<td>146.0</td>
+<td>-2.0</td>
+<td>7528</td>
+<td>68000</td>
 <td>...</td>
-<td>2097572</td>
-<td>0</td>
-<td>166.0</td>
-<td>176.5</td>
-<td>0.284287</td>
-<td>0.296817</td>
+<td>4801322</td>
+<td>23643</td>
+<td>142.5</td>
+<td>149.0</td>
+<td>0.641566</td>
+<td>0.637041</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
@@ -7653,70 +7653,70 @@ a.anchor-link {
 <tr>
 <th>2023-02-20</th>
 <td>2023-02-20</td>
-<td>4774000</td>
-<td>843105000</td>
-<td>174.0</td>
-<td>178.5</td>
-<td>174.0</td>
-<td>178.0</td>
-<td>5.0</td>
-<td>4171</td>
-<td>198663</td>
+<td>8951220</td>
+<td>1312724748</td>
+<td>146.0</td>
+<td>147.5</td>
+<td>145.0</td>
+<td>147.0</td>
+<td>1.0</td>
+<td>5729</td>
+<td>348037</td>
 <td>...</td>
-<td>867000</td>
-<td>48000</td>
-<td>168.5</td>
-<td>178.5</td>
-<td>0.287712</td>
-<td>0.309154</td>
+<td>2118000</td>
+<td>12000</td>
+<td>145.0</td>
+<td>149.0</td>
+<td>0.639580</td>
+<td>0.641694</td>
+<td>0</td>
 <td>1</td>
 <td>1</td>
 <td>0</td>
-<td>1</td>
 </tr>
 <tr>
 <th>2023-02-21</th>
 <td>2023-02-21</td>
-<td>6306000</td>
-<td>1129913000</td>
-<td>179.0</td>
-<td>182.5</td>
-<td>176.0</td>
-<td>177.0</td>
-<td>-1.0</td>
-<td>5381</td>
-<td>242184</td>
+<td>42687050</td>
+<td>6486525128</td>
+<td>148.5</td>
+<td>155.0</td>
+<td>147.0</td>
+<td>155.0</td>
+<td>8.0</td>
+<td>22782</td>
+<td>1193000</td>
 <td>...</td>
-<td>2028000</td>
-<td>2000</td>
-<td>169.0</td>
-<td>182.5</td>
-<td>0.291353</td>
-<td>0.306686</td>
-<td>1</td>
+<td>3415406</td>
+<td>1000</td>
+<td>145.0</td>
+<td>155.0</td>
+<td>0.639195</td>
+<td>0.678920</td>
 <td>0</td>
+<td>1</td>
 <td>0</td>
 <td>1</td>
 </tr>
 <tr>
 <th>2023-02-22</th>
 <td>2023-02-22</td>
-<td>4362000</td>
-<td>755355000</td>
-<td>175.0</td>
-<td>176.0</td>
-<td>171.0</td>
-<td>172.0</td>
-<td>-5.0</td>
-<td>3897</td>
-<td>26000</td>
+<td>35721736</td>
+<td>5509512316</td>
+<td>154.0</td>
+<td>156.0</td>
+<td>152.0</td>
+<td>152.5</td>
+<td>-2.5</td>
+<td>17617</td>
+<td>271000</td>
 <td>...</td>
-<td>1417000</td>
-<td>0</td>
-<td>169.0</td>
-<td>182.5</td>
-<td>0.294932</td>
-<td>0.294350</td>
+<td>9044276</td>
+<td>7642</td>
+<td>145.0</td>
+<td>156.0</td>
+<td>0.639924</td>
+<td>0.667287</td>
 <td>1</td>
 <td>0</td>
 <td>0</td>
@@ -7725,26 +7725,26 @@ a.anchor-link {
 <tr>
 <th>2023-02-23</th>
 <td>2023-02-23</td>
-<td>2810000</td>
-<td>489955000</td>
-<td>174.0</td>
-<td>176.0</td>
-<td>172.0</td>
-<td>174.5</td>
-<td>2.5</td>
-<td>2350</td>
-<td>90951</td>
+<td>34603881</td>
+<td>5423905167</td>
+<td>153.5</td>
+<td>158.5</td>
+<td>153.5</td>
+<td>158.0</td>
+<td>5.5</td>
+<td>19249</td>
+<td>861222</td>
 <td>...</td>
-<td>1101296</td>
-<td>2000</td>
-<td>169.0</td>
-<td>182.5</td>
-<td>0.296888</td>
-<td>0.300518</td>
-<td>1</td>
+<td>3835200</td>
+<td>5000</td>
+<td>145.0</td>
+<td>158.5</td>
+<td>0.642724</td>
+<td>0.692880</td>
 <td>1</td>
 <td>1</td>
 <td>0</td>
+<td>1</td>
 </tr>
 <tr>
 <th>...</th>
@@ -7773,71 +7773,71 @@ a.anchor-link {
 <tr>
 <th>2023-12-22</th>
 <td>2023-12-22</td>
-<td>2461000</td>
-<td>380646000</td>
+<td>60997658</td>
+<td>9257968913</td>
 <td>152.5</td>
-<td>156.0</td>
-<td>152.5</td>
-<td>154.5</td>
-<td>2.5</td>
-<td>2454</td>
-<td>132156</td>
+<td>153.5</td>
+<td>149.5</td>
+<td>153.0</td>
+<td>1.0</td>
+<td>29123</td>
+<td>488699</td>
 <td>...</td>
-<td>943663</td>
-<td>13103</td>
-<td>150.0</td>
-<td>169.5</td>
-<td>0.259472</td>
-<td>0.251172</td>
-<td>0</td>
+<td>18284859</td>
+<td>640000</td>
+<td>136.0</td>
+<td>153.5</td>
+<td>0.597366</td>
+<td>0.669614</td>
 <td>1</td>
 <td>1</td>
 <td>0</td>
+<td>1</td>
 </tr>
 <tr>
 <th>2023-12-25</th>
 <td>2023-12-25</td>
-<td>2853000</td>
-<td>448995000</td>
-<td>155.0</td>
-<td>159.0</td>
-<td>155.0</td>
-<td>157.5</td>
-<td>3.0</td>
-<td>2554</td>
-<td>120187</td>
+<td>89473186</td>
+<td>12839164994</td>
+<td>146.0</td>
+<td>147.5</td>
+<td>140.5</td>
+<td>142.0</td>
+<td>-11.0</td>
+<td>45151</td>
+<td>452023</td>
 <td>...</td>
-<td>684000</td>
-<td>3806</td>
-<td>150.0</td>
-<td>161.0</td>
-<td>0.253975</td>
-<td>0.258574</td>
-<td>0</td>
-<td>1</td>
+<td>24598528</td>
+<td>2100000</td>
+<td>140.5</td>
+<td>153.5</td>
+<td>0.610275</td>
+<td>0.618427</td>
 <td>1</td>
 <td>0</td>
+<td>0</td>
+<td>1</td>
 </tr>
 <tr>
 <th>2023-12-26</th>
 <td>2023-12-26</td>
-<td>1945000</td>
-<td>307613000</td>
-<td>158.0</td>
-<td>159.0</td>
-<td>156.5</td>
-<td>158.5</td>
-<td>1.0</td>
-<td>1978</td>
-<td>46207</td>
+<td>39593610</td>
+<td>5760984388</td>
+<td>142.5</td>
+<td>147.5</td>
+<td>142.0</td>
+<td>146.5</td>
+<td>4.5</td>
+<td>20847</td>
+<td>514500</td>
 <td>...</td>
-<td>339510</td>
-<td>3339</td>
-<td>150.0</td>
-<td>159.0</td>
-<td>0.252701</td>
-<td>0.261041</td>
-<td>0</td>
+<td>11837391</td>
+<td>15000</td>
+<td>140.5</td>
+<td>153.5</td>
+<td>0.616372</td>
+<td>0.639367</td>
+<td>1</td>
 <td>1</td>
 <td>0</td>
 <td>1</td>
@@ -7845,22 +7845,22 @@ a.anchor-link {
 <tr>
 <th>2023-12-27</th>
 <td>2023-12-27</td>
-<td>1722000</td>
-<td>273991000</td>
-<td>159.5</td>
-<td>160.5</td>
-<td>157.5</td>
-<td>159.5</td>
-<td>1.0</td>
-<td>1954</td>
-<td>33378</td>
+<td>33094033</td>
+<td>4933361472</td>
+<td>149.0</td>
+<td>151.5</td>
+<td>147.0</td>
+<td>147.0</td>
+<td>0.5</td>
+<td>18456</td>
+<td>577718</td>
 <td>...</td>
-<td>306132</td>
-<td>266972</td>
-<td>150.0</td>
-<td>160.5</td>
-<td>0.255297</td>
-<td>0.263508</td>
+<td>9734941</td>
+<td>18514</td>
+<td>140.5</td>
+<td>153.5</td>
+<td>0.617402</td>
+<td>0.641694</td>
 <td>1</td>
 <td>1</td>
 <td>0</td>
@@ -7869,23 +7869,23 @@ a.anchor-link {
 <tr>
 <th>2023-12-28</th>
 <td>2023-12-28</td>
-<td>2151000</td>
-<td>339220000</td>
-<td>160.0</td>
-<td>160.0</td>
-<td>156.5</td>
-<td>157.5</td>
-<td>-2.0</td>
-<td>2005</td>
-<td>15000</td>
+<td>28867223</td>
+<td>4155891042</td>
+<td>148.0</td>
+<td>148.0</td>
+<td>142.0</td>
+<td>143.0</td>
+<td>-4.0</td>
+<td>17925</td>
+<td>123499</td>
 <td>...</td>
-<td>541000</td>
+<td>6949990</td>
+<td>2515000</td>
+<td>140.5</td>
+<td>153.5</td>
+<td>0.617381</td>
+<td>0.623081</td>
 <td>0</td>
-<td>152.5</td>
-<td>160.5</td>
-<td>0.257306</td>
-<td>0.258574</td>
-<td>1</td>
 <td>0</td>
 <td>0</td>
 <td>1</td>
@@ -7978,69 +7978,55 @@ a.anchor-link {
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Start                               2023-02-17 00:00:00
-End                                 2023-12-28 00:00:00
-Period                                213 days 00:00:00
-Start Value                                       100.0
-End Value                                    153.852751
-Total Return [%]                              53.852751
-Benchmark Return [%]                           -5.60472
-Max Gross Exposure [%]                            100.0
-Total Fees Paid                                     0.0
-Max Drawdown [%]                              14.065747
-Max Drawdown Duration                  60 days 00:00:00
-Total Trades                                         66
-Total Closed Trades                                  65
-Total Open Trades                                     1
-Open Trade PnL                                      0.0
-Win Rate [%]                                  52.307692
-Best Trade [%]                                14.754098
-Worst Trade [%]                               -8.450704
-Avg Winning Trade [%]                          3.173165
-Avg Losing Trade [%]                          -2.328767
-Avg Winning Trade Duration              3 days 00:00:00
-Avg Losing Trade Duration     2 days 12:55:23.076923076
-Profit Factor                                  1.600729
-Expectancy                                      0.56328
-Sharpe Ratio                                   1.950742
-Calmar Ratio                                   7.765757
-Omega Ratio                                    1.360448
-Sortino Ratio                                  3.310897
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>C:\Users\111030\AppData\Local\Temp\ipykernel_25492\2404176544.py:7: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  if stock_df['long_condition'][i] == 1:
+C:\Users\111030\AppData\Local\Temp\ipykernel_25492\2404176544.py:10: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  stop_loss_long = stock_df['five_day_min_low'][i]
+C:\Users\111030\AppData\Local\Temp\ipykernel_25492\2404176544.py:12: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  if (stock_df['Close'][i] &lt;= stop_loss_long) or (stock_df['short_condition'][i] == 1): # 停利停損
+C:\Users\111030\AppData\Local\Temp\ipykernel_25492\2404176544.py:23: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  if stock_df['short_condition'][i] == 1:
+C:\Users\111030\AppData\Local\Temp\ipykernel_25492\2404176544.py:26: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  stop_loss_short = stock_df['five_day_max_high'][i]
+C:\Users\111030\AppData\Local\Temp\ipykernel_25492\2404176544.py:28: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  if (stock_df['Close'][i] &gt;= stop_loss_short) or (stock_df['long_condition'][i] == 1):# 停利停損
+C:\Users\111030\AppData\Local\Temp\ipykernel_25492\2404176544.py:37: UserWarning: direction has no effect if short_entries and short_exits are set
+  pf = vbt.Portfolio.from_signals(stock_df['Open'],
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:7: FutureWarning:
-
-Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-
-C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:10: FutureWarning:
-
-Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-
-C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:12: FutureWarning:
-
-Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-
-C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:23: FutureWarning:
-
-Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-
-C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:26: FutureWarning:
-
-Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-
-C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:28: FutureWarning:
-
-Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-
-C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:37: UserWarning:
-
-direction has no effect if short_entries and short_exits are set
-
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Start                               2023-02-17 00:00:00
+End                                 2023-12-28 00:00:00
+Period                                213 days 00:00:00
+Start Value                                       100.0
+End Value                                    246.564491
+Total Return [%]                             146.564491
+Benchmark Return [%]                           1.023891
+Max Gross Exposure [%]                            100.0
+Total Fees Paid                                     0.0
+Max Drawdown [%]                              14.534252
+Max Drawdown Duration                  33 days 00:00:00
+Total Trades                                         37
+Total Closed Trades                                  36
+Total Open Trades                                     1
+Open Trade PnL                                -3.424507
+Win Rate [%]                                  72.222222
+Best Trade [%]                                44.638554
+Worst Trade [%]                               -6.967213
+Avg Winning Trade [%]                          4.850968
+Avg Losing Trade [%]                          -2.460974
+Avg Winning Trade Duration    6 days 01:50:46.153846153
+Avg Losing Trade Duration               3 days 08:00:00
+Profit Factor                                  3.856171
+Expectancy                                     4.004281
+Sharpe Ratio                                   2.800553
+Calmar Ratio                                    25.4214
+Omega Ratio                                    1.989788
+Sortino Ratio                                  7.845924
 </pre>
 </div>
 </div>

@@ -3,7 +3,7 @@
 <html lang="en">
 <head><meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>trade_ResGRU 3105 2023</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>trade_GRUModel2 2891 2023</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <style type="text/css">
     pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -7525,15 +7525,14 @@ a.anchor-link {
 <span class="kn">from</span> <span class="nn">vectorbt.portfolio.enums</span> <span class="kn">import</span> <span class="n">OrderSide</span>
 
 <span class="c1"># data preprocess</span>
-<span class="n">target_stock</span> <span class="o">=</span> <span class="s2">"3105"</span>
-<span class="n">threshold</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">stock_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s1">'C:\Users\111030\Desktop\LSTM-stock-predicting-and-construct-investment-strategy-main\data\3105 2023.csv'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">,</span> <span class="n">encoding_errors</span><span class="o">=</span> <span class="s1">'ignore'</span><span class="p">)</span>
+<span class="n">target_stock</span> <span class="o">=</span> <span class="s2">"2891"</span>
+<span class="n">stock_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s1">'C:\Users\111030\Desktop\LSTM-stock-predicting-and-construct-investment-strategy-main\data\2891 2023.csv'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">,</span> <span class="n">encoding_errors</span><span class="o">=</span> <span class="s1">'ignore'</span><span class="p">)</span>
 <span class="n">five_day_min_low</span> <span class="o">=</span> <span class="n">talib</span><span class="o">.</span><span class="n">MIN</span><span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'Low'</span><span class="p">],</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># 五天最低價當作long strategy的停損點</span>
 <span class="n">five_day_max_high</span> <span class="o">=</span> <span class="n">talib</span><span class="o">.</span><span class="n">MAX</span><span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'High'</span><span class="p">],</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># 五天最高價當作short strategy的停損點</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'five_day_min_low'</span><span class="p">]</span> <span class="o">=</span> <span class="n">five_day_min_low</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'five_day_max_high'</span><span class="p">]</span> <span class="o">=</span> <span class="n">five_day_max_high</span>
 <span class="n">stock_df</span> <span class="o">=</span> <span class="n">stock_df</span><span class="p">[</span><span class="mi">25</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">predicted_price_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s2">"C:\Users\111030\Desktop\LSTM-stock-predicting-and-construct-investment-strategy-main\predicted_result\ResGRU 3105 2023 predicted prices.csv"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">,</span> <span class="n">encoding_errors</span> <span class="o">=</span> <span class="s1">'ignore'</span><span class="p">)</span>
+<span class="n">predicted_price_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s1">'C:\Users\111030\Desktop\LSTM-stock-predicting-and-construct-investment-strategy-main\predicted_result\GRUModel2 2891 2023 predicted prices.csv'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">,</span> <span class="n">encoding_errors</span> <span class="o">=</span> <span class="s1">'ignore'</span><span class="p">)</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'Date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'Date'</span><span class="p">])</span>
 <span class="n">stock_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">stock_df</span><span class="p">[</span><span class="s1">'Date'</span><span class="p">]</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span> <span class="o">=</span> <span class="n">predicted_price_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
@@ -7542,8 +7541,8 @@ a.anchor-link {
 <span class="c1"># long short condition</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price_up'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'actual_price_up'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'Close'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">stock_df</span><span class="p">[</span><span class="s1">'Close'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-<span class="n">stock_df</span><span class="p">[</span><span class="s1">'long_condition'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'true_price'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">((</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span><span class="o">-</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'true_price'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">/</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'true_price'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span>
-<span class="n">stock_df</span><span class="p">[</span><span class="s1">'short_condition'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'true_price'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nb">abs</span><span class="p">((</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span><span class="o">-</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'true_price'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">/</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'true_price'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span>
+<span class="n">stock_df</span><span class="p">[</span><span class="s1">'long_condition'</span><span class="p">]</span> <span class="o">=</span> <span class="n">stock_df</span><span class="p">[</span><span class="s1">'true_price'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span> 
+<span class="n">stock_df</span><span class="p">[</span><span class="s1">'short_condition'</span><span class="p">]</span> <span class="o">=</span> <span class="n">stock_df</span><span class="p">[</span><span class="s1">'true_price'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span> 
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'long_condition'</span><span class="p">]</span> <span class="o">=</span> <span class="n">stock_df</span><span class="p">[</span><span class="s1">'long_condition'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'short_condition'</span><span class="p">]</span> <span class="o">=</span> <span class="n">stock_df</span><span class="p">[</span><span class="s1">'short_condition'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
@@ -7629,22 +7628,22 @@ a.anchor-link {
 <tr>
 <th>2023-02-17</th>
 <td>2023-02-17</td>
-<td>5190000</td>
-<td>896464000</td>
-<td>169.5</td>
-<td>175.0</td>
-<td>169.0</td>
-<td>173.0</td>
-<td>2.0</td>
-<td>3871</td>
-<td>75000</td>
+<td>24841839</td>
+<td>565707714</td>
+<td>22.60</td>
+<td>22.85</td>
+<td>22.60</td>
+<td>22.75</td>
+<td>0.05</td>
+<td>5301</td>
+<td>187000</td>
 <td>...</td>
-<td>2097572</td>
-<td>0</td>
-<td>166.0</td>
-<td>176.5</td>
-<td>0.284287</td>
-<td>0.296817</td>
+<td>8507169</td>
+<td>7002000</td>
+<td>22.30</td>
+<td>23.05</td>
+<td>0.497691</td>
+<td>0.495238</td>
 <td>0</td>
 <td>0</td>
 <td>0</td>
@@ -7653,46 +7652,46 @@ a.anchor-link {
 <tr>
 <th>2023-02-20</th>
 <td>2023-02-20</td>
-<td>4774000</td>
-<td>843105000</td>
-<td>174.0</td>
-<td>178.5</td>
-<td>174.0</td>
-<td>178.0</td>
-<td>5.0</td>
-<td>4171</td>
-<td>198663</td>
+<td>15297268</td>
+<td>350306180</td>
+<td>22.80</td>
+<td>23.00</td>
+<td>22.70</td>
+<td>22.95</td>
+<td>0.20</td>
+<td>5547</td>
+<td>198000</td>
 <td>...</td>
-<td>867000</td>
-<td>48000</td>
-<td>168.5</td>
-<td>178.5</td>
-<td>0.287712</td>
-<td>0.309154</td>
+<td>3474000</td>
+<td>4000</td>
+<td>22.50</td>
+<td>23.05</td>
+<td>0.499907</td>
+<td>0.507937</td>
+<td>1</td>
 <td>1</td>
 <td>1</td>
 <td>0</td>
-<td>1</td>
 </tr>
 <tr>
 <th>2023-02-21</th>
 <td>2023-02-21</td>
-<td>6306000</td>
-<td>1129913000</td>
-<td>179.0</td>
-<td>182.5</td>
-<td>176.0</td>
-<td>177.0</td>
-<td>-1.0</td>
-<td>5381</td>
-<td>242184</td>
+<td>13646211</td>
+<td>310729227</td>
+<td>22.85</td>
+<td>22.90</td>
+<td>22.70</td>
+<td>22.80</td>
+<td>-0.15</td>
+<td>5641</td>
+<td>364000</td>
 <td>...</td>
-<td>2028000</td>
-<td>2000</td>
-<td>169.0</td>
-<td>182.5</td>
-<td>0.291353</td>
-<td>0.306686</td>
+<td>5267500</td>
+<td>355000</td>
+<td>22.50</td>
+<td>23.00</td>
+<td>0.501913</td>
+<td>0.498413</td>
 <td>1</td>
 <td>0</td>
 <td>0</td>
@@ -7701,46 +7700,46 @@ a.anchor-link {
 <tr>
 <th>2023-02-22</th>
 <td>2023-02-22</td>
-<td>4362000</td>
-<td>755355000</td>
-<td>175.0</td>
-<td>176.0</td>
-<td>171.0</td>
-<td>172.0</td>
-<td>-5.0</td>
-<td>3897</td>
-<td>26000</td>
+<td>21817031</td>
+<td>496064315</td>
+<td>22.60</td>
+<td>22.90</td>
+<td>22.50</td>
+<td>22.80</td>
+<td>0.00</td>
+<td>6363</td>
+<td>321000</td>
 <td>...</td>
-<td>1417000</td>
-<td>0</td>
-<td>169.0</td>
-<td>182.5</td>
-<td>0.294932</td>
-<td>0.294350</td>
+<td>9627000</td>
+<td>365000</td>
+<td>22.50</td>
+<td>23.00</td>
+<td>0.502761</td>
+<td>0.498413</td>
 <td>1</td>
 <td>0</td>
-<td>0</td>
 <td>1</td>
+<td>0</td>
 </tr>
 <tr>
 <th>2023-02-23</th>
 <td>2023-02-23</td>
-<td>2810000</td>
-<td>489955000</td>
-<td>174.0</td>
-<td>176.0</td>
-<td>172.0</td>
-<td>174.5</td>
-<td>2.5</td>
-<td>2350</td>
-<td>90951</td>
+<td>16630270</td>
+<td>380332282</td>
+<td>22.85</td>
+<td>23.00</td>
+<td>22.75</td>
+<td>22.85</td>
+<td>0.05</td>
+<td>4439</td>
+<td>423000</td>
 <td>...</td>
-<td>1101296</td>
-<td>2000</td>
-<td>169.0</td>
-<td>182.5</td>
-<td>0.296888</td>
-<td>0.300518</td>
+<td>8047000</td>
+<td>0</td>
+<td>22.50</td>
+<td>23.00</td>
+<td>0.504939</td>
+<td>0.501587</td>
 <td>1</td>
 <td>1</td>
 <td>1</td>
@@ -7773,70 +7772,70 @@ a.anchor-link {
 <tr>
 <th>2023-12-22</th>
 <td>2023-12-22</td>
-<td>2461000</td>
-<td>380646000</td>
-<td>152.5</td>
-<td>156.0</td>
-<td>152.5</td>
-<td>154.5</td>
-<td>2.5</td>
-<td>2454</td>
-<td>132156</td>
+<td>28623204</td>
+<td>792394477</td>
+<td>27.65</td>
+<td>27.80</td>
+<td>27.60</td>
+<td>27.75</td>
+<td>-0.10</td>
+<td>9417</td>
+<td>36000</td>
 <td>...</td>
-<td>943663</td>
-<td>13103</td>
-<td>150.0</td>
-<td>169.5</td>
-<td>0.259472</td>
-<td>0.251172</td>
+<td>13876220</td>
+<td>191781</td>
+<td>27.45</td>
+<td>28.40</td>
+<td>0.782593</td>
+<td>0.812698</td>
+<td>0</td>
+<td>0</td>
 <td>0</td>
 <td>1</td>
-<td>1</td>
-<td>0</td>
 </tr>
 <tr>
 <th>2023-12-25</th>
 <td>2023-12-25</td>
-<td>2853000</td>
-<td>448995000</td>
-<td>155.0</td>
-<td>159.0</td>
-<td>155.0</td>
-<td>157.5</td>
-<td>3.0</td>
-<td>2554</td>
-<td>120187</td>
+<td>22838082</td>
+<td>634898926</td>
+<td>27.75</td>
+<td>27.95</td>
+<td>27.60</td>
+<td>27.85</td>
+<td>0.10</td>
+<td>8385</td>
+<td>28000</td>
 <td>...</td>
-<td>684000</td>
-<td>3806</td>
-<td>150.0</td>
-<td>161.0</td>
-<td>0.253975</td>
-<td>0.258574</td>
+<td>2678000</td>
+<td>4928</td>
+<td>27.45</td>
+<td>28.25</td>
+<td>0.780332</td>
+<td>0.819048</td>
 <td>0</td>
 <td>1</td>
-<td>1</td>
 <td>0</td>
+<td>1</td>
 </tr>
 <tr>
 <th>2023-12-26</th>
 <td>2023-12-26</td>
-<td>1945000</td>
-<td>307613000</td>
-<td>158.0</td>
-<td>159.0</td>
-<td>156.5</td>
-<td>158.5</td>
-<td>1.0</td>
-<td>1978</td>
-<td>46207</td>
+<td>24921023</td>
+<td>697396944</td>
+<td>27.95</td>
+<td>28.10</td>
+<td>27.80</td>
+<td>28.00</td>
+<td>0.15</td>
+<td>7458</td>
+<td>116082</td>
 <td>...</td>
-<td>339510</td>
-<td>3339</td>
-<td>150.0</td>
-<td>159.0</td>
-<td>0.252701</td>
-<td>0.261041</td>
+<td>1947125</td>
+<td>209000</td>
+<td>27.45</td>
+<td>28.25</td>
+<td>0.778037</td>
+<td>0.828571</td>
 <td>0</td>
 <td>1</td>
 <td>0</td>
@@ -7845,23 +7844,23 @@ a.anchor-link {
 <tr>
 <th>2023-12-27</th>
 <td>2023-12-27</td>
-<td>1722000</td>
-<td>273991000</td>
-<td>159.5</td>
-<td>160.5</td>
-<td>157.5</td>
-<td>159.5</td>
-<td>1.0</td>
-<td>1954</td>
-<td>33378</td>
+<td>28334648</td>
+<td>793311606</td>
+<td>28.00</td>
+<td>28.10</td>
+<td>27.90</td>
+<td>28.10</td>
+<td>0.10</td>
+<td>8319</td>
+<td>47000</td>
 <td>...</td>
-<td>306132</td>
-<td>266972</td>
-<td>150.0</td>
-<td>160.5</td>
-<td>0.255297</td>
-<td>0.263508</td>
-<td>1</td>
+<td>8124259</td>
+<td>416189</td>
+<td>27.45</td>
+<td>28.10</td>
+<td>0.776859</td>
+<td>0.834921</td>
+<td>0</td>
 <td>1</td>
 <td>0</td>
 <td>1</td>
@@ -7869,24 +7868,24 @@ a.anchor-link {
 <tr>
 <th>2023-12-28</th>
 <td>2023-12-28</td>
-<td>2151000</td>
-<td>339220000</td>
-<td>160.0</td>
-<td>160.0</td>
-<td>156.5</td>
-<td>157.5</td>
-<td>-2.0</td>
-<td>2005</td>
-<td>15000</td>
+<td>37141544</td>
+<td>1047683889</td>
+<td>28.00</td>
+<td>28.40</td>
+<td>27.95</td>
+<td>28.40</td>
+<td>0.30</td>
+<td>10476</td>
+<td>176001</td>
 <td>...</td>
-<td>541000</td>
-<td>0</td>
-<td>152.5</td>
-<td>160.5</td>
-<td>0.257306</td>
-<td>0.258574</td>
+<td>7432940</td>
+<td>152000</td>
+<td>27.60</td>
+<td>28.40</td>
+<td>0.778479</td>
+<td>0.853968</td>
 <td>1</td>
-<td>0</td>
+<td>1</td>
 <td>0</td>
 <td>1</td>
 </tr>
@@ -7895,17 +7894,6 @@ a.anchor-link {
 <p>213 rows × 25 columns</p>
 </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>strategy</p>
 </div>
 </div>
 </div>
@@ -7948,7 +7936,7 @@ a.anchor-link {
             <span class="n">signals_short</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="n">stop_loss_short</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># 停損點重置</span>
             <span class="n">partition_size_short</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># 平倉</span>
-
+            
 <span class="n">entries_long</span> <span class="o">=</span> <span class="n">signals_long</span> <span class="o">==</span> <span class="mi">1</span>
 <span class="n">exits_long</span> <span class="o">=</span> <span class="n">signals_long</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span>
 <span class="n">entries_short</span> <span class="o">=</span> <span class="n">signals_short</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span>
@@ -7983,61 +7971,61 @@ a.anchor-link {
 End                                 2023-12-28 00:00:00
 Period                                213 days 00:00:00
 Start Value                                       100.0
-End Value                                    153.852751
-Total Return [%]                              53.852751
-Benchmark Return [%]                           -5.60472
+End Value                                    150.284569
+Total Return [%]                              50.284569
+Benchmark Return [%]                          23.893805
 Max Gross Exposure [%]                            100.0
 Total Fees Paid                                     0.0
-Max Drawdown [%]                              14.065747
-Max Drawdown Duration                  60 days 00:00:00
-Total Trades                                         66
-Total Closed Trades                                  65
+Max Drawdown [%]                               5.289898
+Max Drawdown Duration                  36 days 00:00:00
+Total Trades                                         54
+Total Closed Trades                                  53
 Total Open Trades                                     1
-Open Trade PnL                                      0.0
-Win Rate [%]                                  52.307692
-Best Trade [%]                                14.754098
-Worst Trade [%]                               -8.450704
-Avg Winning Trade [%]                          3.173165
-Avg Losing Trade [%]                          -2.328767
-Avg Winning Trade Duration              3 days 00:00:00
-Avg Losing Trade Duration     2 days 12:55:23.076923076
-Profit Factor                                  1.600729
-Expectancy                                      0.56328
-Sharpe Ratio                                   1.950742
-Calmar Ratio                                   7.765757
-Omega Ratio                                    1.360448
-Sortino Ratio                                  3.310897
+Open Trade PnL                                 2.591113
+Win Rate [%]                                  60.377358
+Best Trade [%]                                 6.698565
+Worst Trade [%]                                -3.08642
+Avg Winning Trade [%]                          1.861794
+Avg Losing Trade [%]                          -1.025742
+Avg Winning Trade Duration              3 days 12:00:00
+Avg Losing Trade Duration     2 days 11:22:06.315789473
+Profit Factor                                  2.946958
+Expectancy                                     0.851224
+Sharpe Ratio                                   4.262059
+Calmar Ratio                                  19.090117
+Omega Ratio                                    1.892137
+Sortino Ratio                                  7.258074
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:7: FutureWarning:
+<pre>C:\Users\111030\AppData\Local\Temp\ipykernel_23704\419594594.py:7: FutureWarning:
 
 Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
 
-C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:10: FutureWarning:
+C:\Users\111030\AppData\Local\Temp\ipykernel_23704\419594594.py:10: FutureWarning:
 
 Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
 
-C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:12: FutureWarning:
+C:\Users\111030\AppData\Local\Temp\ipykernel_23704\419594594.py:12: FutureWarning:
 
 Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
 
-C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:23: FutureWarning:
+C:\Users\111030\AppData\Local\Temp\ipykernel_23704\419594594.py:23: FutureWarning:
 
 Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
 
-C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:26: FutureWarning:
+C:\Users\111030\AppData\Local\Temp\ipykernel_23704\419594594.py:26: FutureWarning:
 
 Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
 
-C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:28: FutureWarning:
+C:\Users\111030\AppData\Local\Temp\ipykernel_23704\419594594.py:28: FutureWarning:
 
 Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
 
-C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:37: UserWarning:
+C:\Users\111030\AppData\Local\Temp\ipykernel_23704\419594594.py:37: UserWarning:
 
 direction has no effect if short_entries and short_exits are set
 

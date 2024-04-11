@@ -3,7 +3,7 @@
 <html lang="en">
 <head><meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>trade_ResGRU 3105 2023</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>trade_GRUModel2 3105 2023</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <style type="text/css">
     pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -7526,14 +7526,13 @@ a.anchor-link {
 
 <span class="c1"># data preprocess</span>
 <span class="n">target_stock</span> <span class="o">=</span> <span class="s2">"3105"</span>
-<span class="n">threshold</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">stock_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s1">'C:\Users\111030\Desktop\LSTM-stock-predicting-and-construct-investment-strategy-main\data\3105 2023.csv'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">,</span> <span class="n">encoding_errors</span><span class="o">=</span> <span class="s1">'ignore'</span><span class="p">)</span>
 <span class="n">five_day_min_low</span> <span class="o">=</span> <span class="n">talib</span><span class="o">.</span><span class="n">MIN</span><span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'Low'</span><span class="p">],</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># 五天最低價當作long strategy的停損點</span>
 <span class="n">five_day_max_high</span> <span class="o">=</span> <span class="n">talib</span><span class="o">.</span><span class="n">MAX</span><span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'High'</span><span class="p">],</span> <span class="n">timeperiod</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># 五天最高價當作short strategy的停損點</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'five_day_min_low'</span><span class="p">]</span> <span class="o">=</span> <span class="n">five_day_min_low</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'five_day_max_high'</span><span class="p">]</span> <span class="o">=</span> <span class="n">five_day_max_high</span>
 <span class="n">stock_df</span> <span class="o">=</span> <span class="n">stock_df</span><span class="p">[</span><span class="mi">25</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">predicted_price_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s2">"C:\Users\111030\Desktop\LSTM-stock-predicting-and-construct-investment-strategy-main\predicted_result\ResGRU 3105 2023 predicted prices.csv"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">,</span> <span class="n">encoding_errors</span> <span class="o">=</span> <span class="s1">'ignore'</span><span class="p">)</span>
+<span class="n">predicted_price_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">r</span><span class="s1">'C:\Users\111030\Desktop\LSTM-stock-predicting-and-construct-investment-strategy-main\predicted_result\GRUModel2 3105 2023 predicted prices.csv'</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">'utf-8'</span><span class="p">,</span> <span class="n">encoding_errors</span> <span class="o">=</span> <span class="s1">'ignore'</span><span class="p">)</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'Date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'Date'</span><span class="p">])</span>
 <span class="n">stock_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">stock_df</span><span class="p">[</span><span class="s1">'Date'</span><span class="p">]</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span> <span class="o">=</span> <span class="n">predicted_price_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
@@ -7542,8 +7541,8 @@ a.anchor-link {
 <span class="c1"># long short condition</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price_up'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'actual_price_up'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'Close'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">stock_df</span><span class="p">[</span><span class="s1">'Close'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-<span class="n">stock_df</span><span class="p">[</span><span class="s1">'long_condition'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'true_price'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">((</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span><span class="o">-</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'true_price'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">/</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'true_price'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span>
-<span class="n">stock_df</span><span class="p">[</span><span class="s1">'short_condition'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'true_price'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nb">abs</span><span class="p">((</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span><span class="o">-</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'true_price'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">/</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'true_price'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">)</span>
+<span class="n">stock_df</span><span class="p">[</span><span class="s1">'long_condition'</span><span class="p">]</span> <span class="o">=</span> <span class="n">stock_df</span><span class="p">[</span><span class="s1">'true_price'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span> 
+<span class="n">stock_df</span><span class="p">[</span><span class="s1">'short_condition'</span><span class="p">]</span> <span class="o">=</span> <span class="n">stock_df</span><span class="p">[</span><span class="s1">'true_price'</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span><span class="n">stock_df</span><span class="p">[</span><span class="s1">'predicted_price'</span><span class="p">]</span> 
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'long_condition'</span><span class="p">]</span> <span class="o">=</span> <span class="n">stock_df</span><span class="p">[</span><span class="s1">'long_condition'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 <span class="n">stock_df</span><span class="p">[</span><span class="s1">'short_condition'</span><span class="p">]</span> <span class="o">=</span> <span class="n">stock_df</span><span class="p">[</span><span class="s1">'short_condition'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
@@ -7643,7 +7642,7 @@ a.anchor-link {
 <td>0</td>
 <td>166.0</td>
 <td>176.5</td>
-<td>0.284287</td>
+<td>0.290642</td>
 <td>0.296817</td>
 <td>0</td>
 <td>0</td>
@@ -7667,7 +7666,7 @@ a.anchor-link {
 <td>48000</td>
 <td>168.5</td>
 <td>178.5</td>
-<td>0.287712</td>
+<td>0.293471</td>
 <td>0.309154</td>
 <td>1</td>
 <td>1</td>
@@ -7691,7 +7690,7 @@ a.anchor-link {
 <td>2000</td>
 <td>169.0</td>
 <td>182.5</td>
-<td>0.291353</td>
+<td>0.297102</td>
 <td>0.306686</td>
 <td>1</td>
 <td>0</td>
@@ -7715,7 +7714,7 @@ a.anchor-link {
 <td>0</td>
 <td>169.0</td>
 <td>182.5</td>
-<td>0.294932</td>
+<td>0.300520</td>
 <td>0.294350</td>
 <td>1</td>
 <td>0</td>
@@ -7739,7 +7738,7 @@ a.anchor-link {
 <td>2000</td>
 <td>169.0</td>
 <td>182.5</td>
-<td>0.296888</td>
+<td>0.302057</td>
 <td>0.300518</td>
 <td>1</td>
 <td>1</td>
@@ -7787,7 +7786,7 @@ a.anchor-link {
 <td>13103</td>
 <td>150.0</td>
 <td>169.5</td>
-<td>0.259472</td>
+<td>0.265219</td>
 <td>0.251172</td>
 <td>0</td>
 <td>1</td>
@@ -7811,7 +7810,7 @@ a.anchor-link {
 <td>3806</td>
 <td>150.0</td>
 <td>161.0</td>
-<td>0.253975</td>
+<td>0.259532</td>
 <td>0.258574</td>
 <td>0</td>
 <td>1</td>
@@ -7835,7 +7834,7 @@ a.anchor-link {
 <td>3339</td>
 <td>150.0</td>
 <td>159.0</td>
-<td>0.252701</td>
+<td>0.258253</td>
 <td>0.261041</td>
 <td>0</td>
 <td>1</td>
@@ -7859,7 +7858,7 @@ a.anchor-link {
 <td>266972</td>
 <td>150.0</td>
 <td>160.5</td>
-<td>0.255297</td>
+<td>0.260481</td>
 <td>0.263508</td>
 <td>1</td>
 <td>1</td>
@@ -7883,7 +7882,7 @@ a.anchor-link {
 <td>0</td>
 <td>152.5</td>
 <td>160.5</td>
-<td>0.257306</td>
+<td>0.262076</td>
 <td>0.258574</td>
 <td>1</td>
 <td>0</td>
@@ -7895,17 +7894,6 @@ a.anchor-link {
 <p>213 rows × 25 columns</p>
 </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>strategy</p>
 </div>
 </div>
 </div>
@@ -7948,7 +7936,7 @@ a.anchor-link {
             <span class="n">signals_short</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="n">stop_loss_short</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># 停損點重置</span>
             <span class="n">partition_size_short</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># 平倉</span>
-
+            
 <span class="n">entries_long</span> <span class="o">=</span> <span class="n">signals_long</span> <span class="o">==</span> <span class="mi">1</span>
 <span class="n">exits_long</span> <span class="o">=</span> <span class="n">signals_long</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span>
 <span class="n">entries_short</span> <span class="o">=</span> <span class="n">signals_short</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span>
@@ -7978,69 +7966,55 @@ a.anchor-link {
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Start                               2023-02-17 00:00:00
-End                                 2023-12-28 00:00:00
-Period                                213 days 00:00:00
-Start Value                                       100.0
-End Value                                    153.852751
-Total Return [%]                              53.852751
-Benchmark Return [%]                           -5.60472
-Max Gross Exposure [%]                            100.0
-Total Fees Paid                                     0.0
-Max Drawdown [%]                              14.065747
-Max Drawdown Duration                  60 days 00:00:00
-Total Trades                                         66
-Total Closed Trades                                  65
-Total Open Trades                                     1
-Open Trade PnL                                      0.0
-Win Rate [%]                                  52.307692
-Best Trade [%]                                14.754098
-Worst Trade [%]                               -8.450704
-Avg Winning Trade [%]                          3.173165
-Avg Losing Trade [%]                          -2.328767
-Avg Winning Trade Duration              3 days 00:00:00
-Avg Losing Trade Duration     2 days 12:55:23.076923076
-Profit Factor                                  1.600729
-Expectancy                                      0.56328
-Sharpe Ratio                                   1.950742
-Calmar Ratio                                   7.765757
-Omega Ratio                                    1.360448
-Sortino Ratio                                  3.310897
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>C:\Users\111030\AppData\Local\Temp\ipykernel_23704\419594594.py:7: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  if stock_df['long_condition'][i] == 1:
+C:\Users\111030\AppData\Local\Temp\ipykernel_23704\419594594.py:10: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  stop_loss_long = stock_df['five_day_min_low'][i]
+C:\Users\111030\AppData\Local\Temp\ipykernel_23704\419594594.py:12: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  if (stock_df['Close'][i] &lt;= stop_loss_long) or (stock_df['short_condition'][i] == 1): # 停利停損
+C:\Users\111030\AppData\Local\Temp\ipykernel_23704\419594594.py:23: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  if stock_df['short_condition'][i] == 1:
+C:\Users\111030\AppData\Local\Temp\ipykernel_23704\419594594.py:26: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  stop_loss_short = stock_df['five_day_max_high'][i]
+C:\Users\111030\AppData\Local\Temp\ipykernel_23704\419594594.py:28: FutureWarning: Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
+  if (stock_df['Close'][i] &gt;= stop_loss_short) or (stock_df['long_condition'][i] == 1):# 停利停損
+C:\Users\111030\AppData\Local\Temp\ipykernel_23704\419594594.py:37: UserWarning: direction has no effect if short_entries and short_exits are set
+  pf = vbt.Portfolio.from_signals(stock_df['Open'],
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:7: FutureWarning:
-
-Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-
-C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:10: FutureWarning:
-
-Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-
-C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:12: FutureWarning:
-
-Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-
-C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:23: FutureWarning:
-
-Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-
-C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:26: FutureWarning:
-
-Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-
-C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:28: FutureWarning:
-
-Series.__getitem__ treating keys as positions is deprecated. In a future version, integer keys will always be treated as labels (consistent with DataFrame behavior). To access a value by position, use `ser.iloc[pos]`
-
-C:\Users\111030\AppData\Local\Temp\ipykernel_27484\2404176544.py:37: UserWarning:
-
-direction has no effect if short_entries and short_exits are set
-
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>Start                               2023-02-17 00:00:00
+End                                 2023-12-28 00:00:00
+Period                                213 days 00:00:00
+Start Value                                       100.0
+End Value                                    156.040978
+Total Return [%]                              56.040978
+Benchmark Return [%]                           -5.60472
+Max Gross Exposure [%]                            100.0
+Total Fees Paid                                     0.0
+Max Drawdown [%]                              12.324809
+Max Drawdown Duration                  60 days 00:00:00
+Total Trades                                         67
+Total Closed Trades                                  66
+Total Open Trades                                     1
+Open Trade PnL                                      0.0
+Win Rate [%]                                  57.575758
+Best Trade [%]                                16.393443
+Worst Trade [%]                               -8.450704
+Avg Winning Trade [%]                          2.990535
+Avg Losing Trade [%]                          -3.066602
+Avg Winning Trade Duration    2 days 18:56:50.526315789
+Avg Losing Trade Duration               3 days 00:00:00
+Profit Factor                                  1.651116
+Expectancy                                     0.414413
+Sharpe Ratio                                   1.946099
+Calmar Ratio                                   9.278562
+Omega Ratio                                    1.355052
+Sortino Ratio                                  3.135762
 </pre>
 </div>
 </div>
