@@ -23,7 +23,7 @@ if __name__ == "__main__" :
     parser = argparse.ArgumentParser(description='Configuration for the training script.')
 
     # Add arguments
-    parser.add_argument('--target_stock', type=str, default='4938', help='Stock for training and testing')
+    parser.add_argument('--target_stock', type=str, default='3037', help='Stock for training and testing')
     parser.add_argument('--train_seq_len', type=int, default=5, help='Training sequence length.')
     parser.add_argument('--predict_seq_len', type=int, default=1, help='Prediction sequence length.')
     parser.add_argument('--device', type=str, default='cuda' if torch.cuda.is_available() else 'cpu', help='Device to train on.')
@@ -32,7 +32,9 @@ if __name__ == "__main__" :
     # Parse arguments
     args = parser.parse_args()
 
-    test_input = test_input.reshape(test_input.shape[0], 1, test_input.shape[2], test_input.shape[1] * test_input.shape[3])
+    # 合併為一個channel
+    # test_input = test_input.reshape(test_input.shape[0], 1, test_input.shape[2], test_input.shape[1] * test_input.shape[3])
+    
     test_loader = DataLoader(TensorDataset(test_input, test_label), batch_size=args.batch_size, shuffle=False, drop_last=False)
     # testing model
     criterion = nn.MSELoss()
