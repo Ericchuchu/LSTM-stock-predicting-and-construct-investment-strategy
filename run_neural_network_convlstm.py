@@ -21,7 +21,7 @@ if __name__ == "__main__" :
     parser = argparse.ArgumentParser(description='Configuration for the training script.')
 
     # Add arguments
-    parser.add_argument('--target_stock', type=str, default='00637L', help='Stock for training and testing')
+    parser.add_argument('--target_stock', type=str, default='3037', help='Stock for training and testing')
     parser.add_argument('--train_seq_len', type=int, default=5, help='Training sequence length.')
     parser.add_argument('--predict_seq_len', type=int, default=1, help='Prediction sequence length.')
     parser.add_argument('--device', type=str, default='cuda' if torch.cuda.is_available() else 'cpu', help='Device to train on.')
@@ -32,13 +32,14 @@ if __name__ == "__main__" :
     # Parse arguments
     args = parser.parse_args()
 
-    train_input = train_input.reshape(train_input.shape[0], 1, train_input.shape[2], train_input.shape[1] * train_input.shape[3])
-    val_input = val_input.reshape(val_input.shape[0], 1, val_input.shape[2], val_input.shape[1] * val_input.shape[3])
+    # 合併為一個channel
+    # train_input = train_input.reshape(train_input.shape[0], 1, train_input.shape[2], train_input.shape[1] * train_input.shape[3])
+    # val_input = val_input.reshape(val_input.shape[0], 1, val_input.shape[2], val_input.shape[1] * val_input.shape[3])
 
     train_loader = DataLoader(TensorDataset(train_input, train_label), batch_size=args.batch_size, shuffle=True, drop_last=False)
     val_loader = DataLoader(TensorDataset(val_input, val_label), batch_size=args.batch_size, shuffle=False, drop_last=False)
 
-    model = ConvLSTM(input_channels=1, hidden_channels=[8, 1], kernel_size=5, in_dim=24, out_dim=1, device=args.device, step=5)
+    model = ConvLSTM(input_channels=3, hidden_channels=[8, 1], kernel_size=5, in_dim=8, out_dim=1, device=args.device, step=5)
     model.to(args.device)
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate, weight_decay= 0.005)
     criterion = nn.MSELoss()
