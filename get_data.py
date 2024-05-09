@@ -34,16 +34,23 @@ def get_data(target_stock):
     for year in range(2016, 2023): 
         for month in range(1, 13): 
             monthly_data = stock.fetch(year, month)
-            df_month = pd.DataFrame(columns=name_attribute, data=monthly_data)
-            data_price = pd.concat([data_price, df_month], ignore_index=True)
+            if monthly_data: 
+                df_month = pd.DataFrame(monthly_data, columns=name_attribute)
+                df_month_cleaned = df_month.dropna(how='all')
+                if not df_month_cleaned.empty: 
+                    data_price = pd.concat([data_price, df_month_cleaned], ignore_index=True, verify_integrity=True)
     data_price['Date'] = pd.to_datetime(data_price['Date'])
     data_price.index = data_price['Date']
     data_price.drop(columns=["Date"], inplace=True)
 
+    print(target_stock)
     print(len(data_investor))
     print(len(data_price))
     # 合併兩個 dataframe
-    merged_df = pd.merge(data_price, data_investor, on='Date', how='inner')
+    merged_df = pd.merge(data_price, data_investor, left_index=True, right_index = True, how='left')
+    merged_df.fillna(0, inplace=True)
+    # 移除 'Open' 列中值為0的行
+    merged_df = merged_df[merged_df['Open'] != 0]
     filename = f'data\{target_stock} 2016-2022.csv'
     merged_df.to_csv(filename)
     #將Data Frame轉存為csv檔案
@@ -79,8 +86,11 @@ def get_data(target_stock):
     for year in range(2023, 2024): 
         for month in range(1, 13): 
             monthly_data = stock.fetch(year, month)
-            df_month = pd.DataFrame(columns=name_attribute, data=monthly_data)
-            data_price = pd.concat([data_price, df_month], ignore_index=True)
+            if monthly_data: 
+                df_month = pd.DataFrame(monthly_data, columns=name_attribute)
+                df_month_cleaned = df_month.dropna(how='all')
+                if not df_month_cleaned.empty: 
+                    data_price = pd.concat([data_price, df_month_cleaned], ignore_index=True, verify_integrity=True)
     data_price['Date'] = pd.to_datetime(data_price['Date'])
     data_price.index = data_price['Date']
     data_price.drop(columns=["Date"], inplace=True)
@@ -88,13 +98,19 @@ def get_data(target_stock):
     print(len(data_investor))
     print(len(data_price))
     # 合併兩個 dataframe
-    merged_df = pd.merge(data_price, data_investor, on='Date', how='inner')
+    merged_df = pd.merge(data_price, data_investor, left_index=True, right_index = True, how='left')
+    merged_df.fillna(0, inplace=True)
+    # 移除 'Open' 列中值為0的行
+    merged_df = merged_df[merged_df['Open'] != 0]
     filename = f'data\{target_stock} 2023.csv'
     merged_df.to_csv(filename)
     #將Data Frame轉存為csv檔案
 
 if __name__ == '__main__':
-    data = pd.read_csv(r'2023籌碼選股\selected_stock.csv')
-    selected_stock = data['股票代號'].to_numpy()
+    data = pd.read_csv(r'C:\Users\111030\Desktop\select_stock\selected_stock.csv')
+    selected_stock = data['stock_number'].to_numpy()
     for stock in selected_stock:
-        get_data(str(stock))
+        try:
+            get_data(str(stock))
+        except:
+            print(f'{stock} requestion failed') # 4931
