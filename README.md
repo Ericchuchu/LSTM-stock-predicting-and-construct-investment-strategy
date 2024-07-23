@@ -27,3 +27,6 @@ Short condition : When predicted stock close price lower than the close price of
 
 ## Result
 The backtesting result of the individual stocks were stored in .html in the trade file
+
+## article
+https://medium.com/@eric07310115/deep-learning-driven-cta-investment-decisions-stock-price-prediction-and-portfolio-management-9b676da6d2f7
